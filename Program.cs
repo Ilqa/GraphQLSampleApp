@@ -17,7 +17,8 @@ builder.Services.AddGraphQLServer()
         .AddFiltering()
         .AddSorting()
         .AddMutationType<Mutation>()
-        .AddProjections();
+        .AddProjections()
+        .AddInMemorySubscriptions();
 
 var app = builder.Build();
 app.MapGet("/", () => "Hello, the app is working! Please add '/graphql' to the url ");
@@ -28,5 +29,5 @@ app.UseEndpoints(endpoints =>
     endpoints.MapGraphQL();
 });
 
-app.UseGraphQLVoyager("/graphql-voyager");
+app.UseWebSockets();
 app.Run();

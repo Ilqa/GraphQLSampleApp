@@ -1,7 +1,7 @@
 ﻿using GraphQLSampleApp.Data;
 using GraphQLSampleApp.DTOs;
-using GraphQLSampleApp.GraphQL.Types;
 using GraphQLSampleApp.Models;
+using HotChocolate.Subscriptions;
 
 namespace GraphQLSampleApp.GraphQL;
 
@@ -24,7 +24,8 @@ public class Mutation
 
 
     [UseDbContext(typeof(ApiDbContext))]
-    public async Task<Product> AddProductAsync(ProductInput input, [ScopedService] ApiDbContext context)
+    public async Task<Product> AddProductAsync(ProductInput input, [ScopedService] ApiDbContext context,
+        [Service] ITopicEventSender eventSender, CancellationToken cancellationToken)
     {
         var product = new Product
         {
@@ -36,6 +37,9 @@ public class Mutation
 
         context.Products.Add(product);
         await context.SaveChangesAsync();
+
+        await eventSender.SendAsync(nameof(Subscription.OnProductAdded), product, cancellationToken);
+
 
         return product;
     }
