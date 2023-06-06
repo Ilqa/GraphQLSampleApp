@@ -8,6 +8,8 @@ namespace GraphQLSampleApp.GraphQL
     {
         [UseDbContext(typeof(ApiDbContext))]
         [UseProjection]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<Product> GetProducts([ScopedService] ApiDbContext context)
         {
             return context.Products;
@@ -15,6 +17,8 @@ namespace GraphQLSampleApp.GraphQL
 
         [UseDbContext(typeof(ApiDbContext))]
         [UseProjection]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<ProductCategory> GetProductCategories([ScopedService] ApiDbContext context)
         {
             return context.ProductCategories;
